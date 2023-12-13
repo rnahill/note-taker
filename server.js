@@ -1,7 +1,8 @@
 // Consts needed
 const express = require('express');
 const path = require('path');
-const api = require("./public/assets/js/index.js");
+const  fs = require('fs');
+const db = require('./db/db.json');
 
 
 const PORT = 3001;
@@ -13,40 +14,29 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/api', api);
+// app.use('/api', api);
 
+// API routes
 
-app.get('/api/notes', (req,res) => {
-
+app.get('./api/notes', (req,res) => {
+    fs.readFile('./db/db.json', (err, data) =>{
+        if (err) {
+            console.log(err);
+        };
+        let dbData = JSON.parse(data);
+        res.json(dbData);
+    })
 });
 
 app.post('/api/notes', (req,res) => {
-
+    let newNote = req.body;
+    db.push(newNote);
+    fs.writeFileSync('./db/db.json', JSON.stringify(db))
+    res.json(db)
 });
 
-app.delete('/api/notes/:note_id', (req,res) => {
-    
-});
 
 
 
 
-// hw setup
-
-// look for fetches in public folder and take note of the routes
-
-// fetch('/api/notes', {
-//     method: 'GET',
-
-
-
-
-// fetch('/api/notes', {
-//     method: 'POST',
-
-
-
-
-//   fetch(`/api/notes/${id}`, {
-// method: 'DELETE',
 
