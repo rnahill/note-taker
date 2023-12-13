@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 const  fs = require('fs');
-const db = require('./db/db.json');
+let db = require('./db/db.json');
 
 
 const PORT = 3001;
@@ -14,11 +14,11 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use('/api', api);
+
 
 // API routes
 
-app.get('./api/notes', (req,res) => {
+app.get('/api/notes', (req,res) => {
     fs.readFile('./db/db.json', (err, data) =>{
         if (err) {
             console.log(err);
@@ -34,6 +34,10 @@ app.post('/api/notes', (req,res) => {
     fs.writeFileSync('./db/db.json', JSON.stringify(db))
     res.json(db)
 });
+
+app.listen(PORT, () =>
+  console.log(`App listening at http://localhost:${PORT}`)
+);
 
 
 
